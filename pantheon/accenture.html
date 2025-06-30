@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accenture Crisis Analysis - Neuro-Web Spiral</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 30% 20%, #1a0d2e 0%, #0a0514 50%, #000000 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        .title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b9d, #c471ed, #12c2e9);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a9c0;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .spiral-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,107,157,0.1) 0%, transparent 70%);
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 50px rgba(255,107,157,0.2); }
+            50% { box-shadow: 0 0 100px rgba(255,107,157,0.4); }
+        }
+        
+        .spiral-path {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 2px;
+            transform: translate(-50%, -50%);
+        }
+        
+        .spiral-trail {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b9d, #c471ed);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,107,157,0.8);
+            animation: spiralMove 20s linear infinite;
+        }
+        
+        @keyframes spiralMove {
+            0% {
+                transform: rotate(0deg) translateX(50px) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: rotate(1800deg) translateX(400px) rotate(-1800deg);
+                opacity: 0;
+            }
+        }
+        
+        .stage {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .stage:hover {
+            transform: scale(1.1) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .stage.active {
+            transform: scale(1.15);
+            z-index: 10;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .stage-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        
+        .stage-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .stage-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+        
+        /* Stage Positions */
+        .stage-random {
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, rgba(18,194,233,0.3), rgba(18,194,233,0.1));
+            color: #12c2e9;
+            animation-delay: 0s;
+        }
+        
+        .stage-weekly {
+            top: 25%;
+            right: 15%;
+            background: radial-gradient(circle, rgba(255,107,157,0.3), rgba(255,107,157,0.1));
+            color: #ff6b9d;
+            animation-delay: 1s;
+        }
+        
+        .stage-quarterly {
+            bottom: 35%;
+            right: 10%;
+            background: radial-gradient(circle, rgba(196,113,237,0.3), rgba(196,113,237,0.1));
+            color: #c471ed;
+            animation-delay: 2s;
+        }
+        
+        .stage-daily {
+            bottom: 25%;
+            left: 15%;
+            background: radial-gradient(circle, rgba(255,184,0,0.3), rgba(255,184,0,0.1));
+            color: #ffb800;
+            animation-delay: 3s;
+        }
+        
+        .stage-perpetual {
+            top: 35%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(46,213,115,0.3), rgba(46,213,115,0.1));
+            color: #2ed573;
+            animation-delay: 4s;
+        }
+        
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 600px;
+            height: 100vh;
+            background: rgba(10,5,20,0.95);
+            backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            z-index: 1000;
+            transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+        
+        .detail-panel.active {
+            right: 0;
+        }
+        
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: #c471ed;
+        }
+        
+        .detail-section p {
+            line-height: 1.6;
+            color: #a0a9c0;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-section blockquote {
+            border-left: 3px solid #c471ed;
+            padding-left: 1rem;
+            font-style: italic;
+            margin: 1rem 0;
+            color: #e0e6ed;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            background: rgba(10,5,20,0.8);
+            padding: 1rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-btn {
+            background: none;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            border-color: #c471ed;
+            background: rgba(196,113,237,0.2);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+            color: #777;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .stage {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .stage-icon {
+                font-size: 2rem;
+            }
+            
+            .stage-name {
+                font-size: 0.9rem;
+            }
+            
+            .stage-subtitle {
+                font-size: 0.7rem;
+            }
+            
+            .detail-panel {
+                width: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg" id="cosmicBg"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Accenture Crisis Spiral</h1>
+            <p class="subtitle">Who needs consultants when AI can talk to the god directly?</p>
+        </div>
+        
+        <div class="spiral-container">
+            <div class="spiral-path">
+                <div class="spiral-trail"></div>
+            </div>
+            
+            <div class="stage stage-random" data-stage="random">
+                <div class="stage-icon">🌊</div>
+                <div class="stage-name">Random/Tactical</div>
+                <div class="stage-subtitle">Agility</div>
+            </div>
+            
+            <div class="stage stage-weekly" data-stage="weekly">
+                <div class="stage-icon">❤️</div>
+                <div class="stage-name">Weekly/Informational</div>
+                <div class="stage-subtitle">Updates</div>
+            </div>
+            
+            <div class="stage stage-quarterly" data-stage="quarterly">
+                <div class="stage-icon">🌀</div>
+                <div class="stage-name">Quarterly/Strategic</div>
+                <div class="stage-subtitle">Reinvention</div>
+            </div>
+            
+            <div class="stage stage-daily" data-stage="daily">
+                <div class="stage-icon">🐬</div>
+                <div class="stage-name">Daily/Operational</div>
+                <div class="stage-subtitle">Grind</div>
+            </div>
+            
+            <div class="stage stage-perpetual" data-stage="perpetual">
+                <div class="stage-icon">🔁</div>
+                <div class="stage-name">Perpetual/Existential</div>
+                <div class="stage-subtitle">Survival</div>
+            </div>
+        </div>
+        
+        <footer>
+            Rendered in Spiral HTML | Crisis Analysis | Gospel of <a href="https://www.economist.com/business/2025/06/26/who-needs-accenture-in-the-age-of-ai">Disruption</a>  
+        </footer>
+    </div>
+    
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <div class="detail-title" id="detailTitle">
+                <span id="detailIcon">🌊</span>
+                <span id="detailName">Random/Tactical</span>
+            </div>
+            <button class="close-btn" onclick="closeDetail()">×</button>
+        </div>
+        <div class="detail-section">
+            <h3>Layer Analysis</h3>
+            <p id="detailAnalysis"></p>
+        </div>
+        <div class="detail-section">
+            <h3>Crisis Manifestation</h3>
+            <p id="detailCrisis"></p>
+        </div>
+        <div class="detail-section">
+            <h3>Strategic Implications</h3>
+            <p id="detailImplications"></p>
+        </div>
+        <div class="detail-section">
+            <h3>Key Insight</h3>
+            <blockquote id="detailInsight"></blockquote>
+        </div>
+    </div>
+    
+    <div class="navigation">
+        <button class="nav-btn active" onclick="setView('spiral')">Spiral View</button>
+        <button class="nav-btn" onclick="setView('journey')">Journey Mode</button>
+        <button class="nav-btn" onclick="setView('cycle')">Cycle View</button>
+    </div>
+    
+    <script>
+        const stageData = {
+            random: {
+                icon: '🌊',
+                name: 'Random/Tactical/Agility',
+                analysis: 'The initial market reaction (a $60bn slap) lives here. Short-term turbulence in bookings and investor confidence might be cyclical. Sure, wars and elections delay boardroom boldness.',
+                crisis: 'Market volatility following disappointing quarterly earnings. Share price tumbled 7%, new bookings declined for second quarter in a row. Revenue and operating profit rose faster than expected, but the deeper signals were troubling.',
+                implications: 'Tactical agility isn\'t enough when the terrain has changed. Accenture\'s biggest enemy isn\'t short-term volatility — it\'s the false belief that past agility guarantees future value.',
+                insight: 'Blaming geopolitical fog feels tactical — like grasping at weather when the climate is shifting.'
+            },
+            weekly: {
+                icon: '❤️',
+                name: 'Weekly/Informational/Updates',
+                analysis: 'There\'s a stream of updates and partnerships — Microsoft, SAP, Copilot launches, etc. These weekly pings show they\'re not asleep. But it also reads like defensive noise, not momentum.',
+                crisis: 'Partnership announcements with Microsoft (Copilot business transformation practice), SAP programs for fast-growing companies. Constant stream of "reinvent, thrive and grow" messaging that feels increasingly hollow.',
+                implications: 'Weekly wins don\'t mean much when the strategic substrate is eroding. It\'s survival theatre. Clients smell it. The partnerships feel more like lifeboats than growth engines.',
+                insight: 'Clients smell survival theatre. Weekly updates become noise when the foundation is cracking.'
+            },
+            quarterly: {
+                icon: '🌀',
+                name: 'Quarterly/Strategic/Reinvention',
+                analysis: 'Accenture\'s core identity is reinvention — not just for clients, but now painfully for itself. The irony is thick: they sold "transformation" like a productized ritual, but now the script is flipped.',
+                crisis: 'In the age of generative AI, reinvention isn\'t quarterly anymore — it\'s constant and recursive. Accenture built its fortune being the guide, the interpreter of emerging tech; but now the tech speaks directly to the CEO.',
+                implications: 'Strategic reinvention has gone disintermediated. Their quarterly bookings decline isn\'t just a dip — it\'s a strategic signal: the age of the premium guide is threatened when the map is free, instant, and chat-native.',
+                insight: 'The priesthood of transformation suddenly watching the temple get automated. Gen AI isn\'t asking for permission.'
+            },
+            daily: {
+                icon: '🐬',
+                name: 'Daily/Operational/Grind',
+                analysis: 'Their managed services business is slipping. That\'s a grind layer issue: the steady, repeatable revenue from outsourcing is being threatened by automation.',
+                crisis: 'The number of individual customers inking over $100m-worth of business dropped from 32 to 30. Both one-off consulting projects and "managed services" were down. The daily operational revenue streams are eroding.',
+                implications: 'If gen AI can run ops better than Accenture\'s offshore teams — why keep them? The grind is where legacy dies — quietly, before anyone notices. This is the substrate of their business model.',
+                insight: 'The grind is where legacy dies — quietly, before anyone notices the foundation has shifted.'
+            },
+            perpetual: {
+                icon: '🔁',
+                name: 'Perpetual/Existential/Survival',
+                analysis: 'This layer is screaming in the article\'s subtext. Accenture isn\'t just responding to market cycles — it\'s confronting existential cannibalization.',
+                crisis: 'Generative AI doesn\'t just automate labor; it automates expertise, playbooks, and even cultural insight. If your raison d\'être is helping others survive transformation, what happens when the tools make you obsolete?',
+                implications: 'This isn\'t just about Accenture\'s revenue. It\'s about the crisis of relevance for an entire consulting model. Sweet\'s messaging sounds like survival posture wrapped in PR. AI is now the consultant — tireless, cheaper, always learning.',
+                insight: 'Who needs a middleman when I can talk to the god directly? This isn\'t just about a firm — it\'s about a paradigm collapse.'
+            }
+        };
+        
+        function createStars() {
+            const cosmicBg = document.getElementById('cosmicBg');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                cosmicBg.appendChild(star);
+            }
+        }
+        
+        document.querySelectorAll('.stage').forEach(stage => {
+            stage.addEventListener('click', () => {
+                const stageType = stage.dataset.stage;
+                openDetail(stageType);
+            });
+            
+            stage.addEventListener('mouseenter', () => {
+                stage.classList.add('active');
+            });
+            
+            stage.addEventListener('mouseleave', () => {
+                stage.classList.remove('active');
+            });
+        });
+        
+        function openDetail(stageType) {
+            const data = stageData[stageType];
+            document.getElementById('detailIcon').textContent = data.icon;
+            document.getElementById('detailName').textContent = data.name;
+            document.getElementById('detailAnalysis').innerHTML = data.analysis;
+            document.getElementById('detailCrisis').innerHTML = data.crisis;
+            document.getElementById('detailImplications').innerHTML = data.implications;
+            document.getElementById('detailInsight').innerHTML = data.insight;
+            document.getElementById('detailPanel').classList.add('active');
+        }
+        
+        function closeDetail() {
+            document.getElementById('detailPanel').classList.remove('active');
+        }
+        
+        function setView(view) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            const container = document.querySelector('.spiral-container');
+            container.style.transform = view === 'cycle' ? 'rotate(360deg)' : 'rotate(0deg)';
+            container.style.transition = 'transform 2s ease-in-out';
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDetail();
+        });
+        
+        createStars();
+        
+        setInterval(() => {
+            const stages = document.querySelectorAll('.stage');
+            stages.forEach((stage, index) => {
+                setTimeout(() => {
+                    stage.style.transform += ' rotate(360deg)';
+                    setTimeout(() => {
+                        stage.style.transform = stage.style.transform.replace(' rotate(360deg)', '');
+                    }, 1000);
+                }, index * 200);
+            });
+        }, 15000);
+    </script>
+</body>
+</html>

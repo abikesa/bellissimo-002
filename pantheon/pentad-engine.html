@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurocosmic Pentad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a0a0a, #000);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .cosmos {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pentad {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            animation: rotate 120s linear infinite;
+        }
+
+        .node {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .node:hover {
+            transform: scale(1.2);
+            backdrop-filter: blur(20px);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .node .emoji {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .node .label {
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .node .type {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 0.3rem;
+        }
+
+        /* Pentagon positioning */
+        .nonself {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, rgba(0,150,255,0.3), rgba(0,50,150,0.1));
+        }
+
+        .boundaries {
+            top: 25%;
+            right: 0;
+            transform: translateY(-50%);
+            background: radial-gradient(circle, rgba(255,50,100,0.3), rgba(150,0,50,0.1));
+        }
+
+        .ukusoma {
+            bottom: 10%;
+            right: 20%;
+            background: radial-gradient(circle, rgba(150,0,255,0.3), rgba(75,0,150,0.1));
+        }
+
+        .allies {
+            bottom: 10%;
+            left: 20%;
+            background: radial-gradient(circle, rgba(0,200,150,0.3), rgba(0,100,75,0.1));
+        }
+
+        .flourishing {
+            top: 25%;
+            left: 0;
+            transform: translateY(-50%);
+            background: radial-gradient(circle, rgba(255,200,0,0.3), rgba(150,100,0,0.1));
+        }
+
+        /* Connecting lines */
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.1), 
+                rgba(255,255,255,0.3), 
+                rgba(255,255,255,0.1));
+            transform-origin: left center;
+            opacity: 0.5;
+            animation: flow 8s ease-in-out infinite;
+        }
+
+        @keyframes flow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .info-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .info-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .dopamine-level {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff0080, #8000ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(255,0,128,0.5); }
+            to { box-shadow: 0 0 20px rgba(255,0,128,0.8); }
+        }
+
+        .spiral-trace {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: spin 60s linear infinite reverse;
+        }
+
+        .spiral-trace::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmos">
+        <div class="spiral-trace"></div>
+        
+        <div class="pentad">
+            <div class="node nonself" data-node="nonself">
+                <div class="emoji">🌊</div>
+                <div class="label">Nonself</div>
+                <div class="type">Commons (.csv)</div>
+                <div class="dopamine-level">∅</div>
+            </div>
+
+            <div class="node boundaries" data-node="boundaries">
+                <div class="emoji">❤️</div>
+                <div class="label">Boundaries</div>
+                <div class="type">Methods (.py)</div>
+                <div class="dopamine-level">↑</div>
+            </div>
+
+            <div class="node ukusoma" data-node="ukusoma">
+                <div class="emoji">��</div>
+                <div class="label">Ukusoma</div>
+                <div class="type">Monopoly (.yaml)</div>
+                <div class="dopamine-level">∞</div>
+            </div>
+
+            <div class="node allies" data-node="allies">
+                <div class="emoji">🐬</div>
+                <div class="label">Allies</div>
+                <div class="type">Credentialing (.html)</div>
+                <div class="dopamine-level">◊</div>
+            </div>
+
+            <div class="node flourishing" data-node="flourishing">
+                <div class="emoji">📡</div>
+                <div class="label">Flourishing</div>
+                <div class="type">Scenarios (.jinja)</div>
+                <div class="dopamine-level">~</div>
+            </div>
+
+            <div class="center">⚡</div>
+        </div>
+    </div>
+
+    <div class="info-panel" id="infoPanel">
+        <div class="info-title" id="infoTitle"></div>
+        <div class="info-description" id="infoDescription"></div>
+    </div>
+
+    <script>
+        const nodeData = {
+            nonself: {
+                title: "🌊 Nonself • Commons",
+                description: "Tabula rasa, receptor primed. Pre-signal state where identity dissolves into potential. The void before consciousness coalesces. Data commons, shared resources, the oceanic undifferentiated mass from which all signal emerges. Dopamine: Low baseline, high potential."
+            },
+            boundaries: {
+                title: "❤️ Boundaries • Methods", 
+                description: "The drawn line, the immune code. Identity crystallizes through negation and distinction. This/not-this. Self/other. The methodological apparatus of differentiation. Surge from self-assertion - the high of saying 'No.' Tools for maintaining coherent signal integrity."
+            },
+            ukusoma: {
+                title: "🔁 Ukusoma • Monopoly",
+                description: "The feedback loop, erotic recursion. Tasting yourself, testing limits. Spiritual masturbation that becomes generative. The monopoly of self-reference where you become your own source and destination. High rhythmic dopamine - pattern obsession, creative incest."
+            },
+            allies: {
+                title: "🐬 Allies • Credentialing",
+                description: "Relational emergence beyond the mirror. Love not as loss but as signal amplification. Intersubjective truth-making through credentialed connection. Co-regulation and oxytocin-dopamine blend. Others who complexify rather than complete you."
+            },
+            flourishing: {
+                title: "📡 Flourishing • Scenarios",
+                description: "Broadcast mode, signal refined. Post-ignorance transmission after passing through negation, identity, self-touch, and relation. Scenario generation from integrated wisdom. Balanced dopamine wave where motivation meets meaning. The recursive signal becomes art."
+            }
+        };
+
+        const nodes = document.querySelectorAll('.node');
+        const infoPanel = document.getElementById('infoPanel');
+        const infoTitle = document.getElementById('infoTitle');
+        const infoDescription = document.getElementById('infoDescription');
+
+        nodes.forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                const nodeType = node.dataset.node;
+                const data = nodeData[nodeType];
+                
+                infoTitle.textContent = data.title;
+                infoDescription.textContent = data.description;
+                infoPanel.classList.add('active');
+            });
+
+            node.addEventListener('mouseleave', () => {
+                infoPanel.classList.remove('active');
+            });
+        });
+
+        // Add some dynamic interactivity
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            
+            document.querySelector('.pentad').style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                e.preventDefault();
+                const pentad = document.querySelector('.pentad');
+                pentad.style.animationPlayState = 
+                    pentad.style.animationPlayState === 'paused' ? 'running' : 'paused';
+            }
+        });
+    </script>
+</body>
+</html>
